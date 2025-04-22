@@ -23,40 +23,71 @@ The project uses **PennyLane**, **PyTorch**, and **Matplotlib**, and supports bo
 
 ---
 
-## 📁 Folder Structure
+## 📦 Requirements
 
-```text
-quantum_fyp/
-│
-├── data/                      # Preprocessed datasets per embedding
-│   ├── angle/
-│   ├── amplitude/
-│   ├── Reupload/
-│
-├── dataset/                  # Preprocessing scripts for each embedding
-│
-├── models/                   # Quantum circuit definitions per embedding
-│
-├── adversaries/              # FGSM and BIM attack methods (per embedding)
-│
-├── train/                    # Training scripts (TorchLayer-based)
-│
-├── Results/                  # Evaluation results and graphs
-│   ├── fgsm/
-│   └── bim/
-│
-├── weights/                  # Saved model weights (.npy files)
-│
-├── Gen_data/                 # Training logs and metrics (.csv)
-│   ├── angle/
-│   ├── amplitude/
-│   ├── Reupload/
-│
-└── README.md                 # Project documentation
+To get started, install the required packages:
+
+```bash
+pip install pennylane numpy pandas matplotlib scikit-learn
 ```
+
+> ✅ Tested with Python 3.11 and PennyLane ≥ 0.32.
 
 ---
 
+## 🧠 Embeddings Overview
+
+| Embedding    | Qubits Used | Encoding Strategy         |
+|--------------|-------------|---------------------------|
+| **Angle**    | 4           | RY rotations (min–max [0, π]) |
+| **Amplitude**| 3 (2 + 1)   | L2-normalized row-wise amplitude encoding |
+| **Re-upload**| 5 (4 + 1)   | RY with data re-uploading at each layer |
+| **ZZ-FM**    | TBD         | Feature map-based (reserved) |
+
+---
+
+## 🗂️ Folder Structure
+
+<details>
+<summary>Click to expand</summary>
+
+```
+part-2_fyp/
+├── bim_robustness.py
+├── generate_fgsm_robustness.py
+├── generate_bim_robustness.py
+
+├── adversaries/
+│   ├── adversaries_{angle, amplitude, reupload, zzfm}.py
+
+├── data/
+│   ├── data_banknote_authentication.csv
+│   └── {angle, amplitude, Reupload, ZZ-fm}/
+│       └── banknote_*_preprocessed_{train|val|test}.csv
+
+├── dataset/
+│   └── banknote_preprocessing_{angle, amplitude, reupload, zzfm}.py
+
+├── Gen_data/
+│   └── {angle, amplitude, Reupload, ZZfm}/
+│       └── {clean, adversarial}/
+│           └── *.csv (metrics, gradients, ⟨Z⟩ distributions)
+
+├── models/
+│   ├── quantum_model_{angle, amplitude, reupload, zzfm}.py
+
+├── Results/
+│   └── {fgsm, bim, bim_stronger}/
+│       ├── *_metrics.csv
+│       ├── *_acc_vs_eps.png, *_loss_vs_eps.png
+
+├── train/
+│   ├── train_{angle, amplitude, reupload, zzfm}.py
+
+└── weights/
+    └── {angle, amplitude, Reupload, ZZfm}/
+        └── *_10layers_{clean|fgsm_ε|bim_ε}.npy
+```
 ## ⚙️ Requirements
 
 To install dependencies inside a virtual environment:
@@ -75,6 +106,17 @@ pip install -r requirements.txt
 - `pandas`
 
 ---
+## 🧪 Running the Project
+
+### 🧹 Preprocess Dataset
+
+```bash
+cd dataset/
+python banknote_preprocessing_angle.py
+python banknote_preprocessing_amplitude.py
+python banknote_preprocessing_reupload.py
+```
+
 
 ## 🚀 How to Train a Model
 
@@ -157,6 +199,9 @@ This repository supports the final year research project investigating:
 Based on concepts and architecture from:
 
 - Sirui Lu et al., *"Quantum Adversarial Machine Learning"*, [arXiv:2001.00030](https://arxiv.org/abs/2001.00030)
+- **Pérez-Salinas et al.**, *Quantum*, 2020 — [Data Re-uploading Classifier](https://quantum-journal.org/papers/q-2020-02-06-226/)
+- **Goodfellow et al.**, *arXiv:1412.6572*, 2014 — [FGSM](https://arxiv.org/abs/1412.6572)
+
 
 ---
 
@@ -167,3 +212,4 @@ Based on concepts and architecture from:
 - My final year project supervisor : Dr Sharu Theresa Jose
 
 ---
+
