@@ -1,0 +1,1 @@
+from models.quantum_model_angle import quantum_classifier, n_qubits, p as num_layers
